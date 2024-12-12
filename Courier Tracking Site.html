@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Engineering & Systems (KTS) Courier Data Tracking Portal</title>
+    <style>
+        body {
+            font-family: Calibri, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+        .container {
+            width: 90%;
+            margin: 0 auto;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .search-box {
+            margin: 20px 0;
+            text-align: center;
+        }
+        input[type="text"] {
+            padding: 8px;
+            width: 50%;
+            font-size: 16px;
+            border: 1px solid #ddd;
+        }
+        .datetime {
+            text-align: right;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Select Engineering & Systems (KTS) Courier Data Tracking Portal</h1>
+        <div class="datetime">
+            <span id="currentDateTime"></span>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="search-box">
+            <label for="search">Search: </label>
+            <input type="text" id="search" placeholder="Enter Date or Customer Name...">
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>DATE</th>
+                    <th>SENT FROM</th>
+                    <th>SENT TO</th>
+                    <th>ITEM DESCRIPTION</th>
+                    <th>COURIER PARTNER</th>
+                    <th>AWB / LR / DOCKET NO</th>
+                    <th>REMARKS</th>
+                    <th>ITEM HANDOVERED BY</th>
+                    <th>SHIPMENT STATUS</th>
+                    <th>LIVE Tracking Status</th>
+                </tr>
+            </thead>
+            <tbody id="courierTable">
+                <!-- Courier data will be injected here via JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Example data - you can load this from a server or database
+        const courierData = [
+            {
+                date: "26.11.2024",
+                sentFrom: "SELECT ENGINEERING & SYSTEMS - HYD",
+                sentTo: "LAURUS LABS ,VISHAKAPATNAM",
+                itemDescription: "POLY STUDIO X70 CAMERA-01 NO, POLY EXPANSION MICROPHONE-01 NO",
+                courierPartner: "MOVE ON",
+                awbNo: "67571",
+                remarks: "HANOVERED AT 4 TH FLOOR",
+                itemHandoveredBy: "S SUDHARSHAN",
+                shipmentStatus: "Delivered",
+                liveTrackingUrl: "https://authorcodesoftware.in/moveonlogistics/newmastertracking.aspx?awb=67571"
+            },
+            {
+                date: "04.12.2024",
+                sentFrom: "SELECT ENGINEERING & SYSTEMS - HYD",
+                sentTo: "MATRIC COMSEC LTD, WAGHODIA",
+                itemDescription: "MATRIX DIGITAL KEYPHONE EON510-01NO, MATRIX ETERNITY GE CARD CO4+SLT16-01NO",
+                courierPartner: "MOVE ON",
+                awbNo: "67598",
+                remarks: "HANOVERED AT 4 TH FLOOR",
+                itemHandoveredBy: "S SUDHARSHAN",
+                shipmentStatus: "Delivered",
+                liveTrackingUrl: "https://authorcodesoftware.in/moveonlogistics/newmastertracking.aspx?awb=67598"
+            },
+            {
+                date: "04.12.2024",
+                sentFrom: "SELECT ENGINEERING & SYSTEMS - HYD",
+                sentTo: "HEXA COMMUNICATIONS LTD , MUMBAI",
+                itemDescription: "OPENSTAGE 15T DIGITAL PHONE -02NO'S, OPENSTAGE 80 T DIGITAL PHONE-2 NO'S",
+                courierPartner: "FRANCH EXPRESS",
+                awbNo: "97040122071",
+                remarks: "HANOVERED AT 4 TH FLOOR",
+                itemHandoveredBy: "S SUDHARSHAN",
+                shipmentStatus: "Delivered",
+                liveTrackingUrl: "https://franchexpress.com/courier-tracking/"
+            },
+            {
+                date: "05.12.2024",
+                sentFrom: "SELECT ENGINEERING & SYSTEMS - HYD",
+                sentTo: "DASAMI LAB PRIVATE LIMITED , VELIMINDU CHITYAL MANDAL, NALGONDA",
+                itemDescription: "MATRIX SETUVFX 0016 GATEWAY -01 NO",
+                courierPartner: "MOVE ON",
+                awbNo: "67601",
+                remarks: "HANOVERED AT 4 TH FLOOR",
+                itemHandoveredBy: "S SUDHARSHAN",
+                shipmentStatus: "Delivered",
+                liveTrackingUrl: "https://authorcodesoftware.in/moveonlogistics/newmastertracking.aspx?awb=67601"
+           },
+            {
+                date: "06.12.2024",
+                sentFrom: "SELECT ENGINEERING & SYSTEMS - HYD",
+                sentTo: "M/S ANDHRA SUGARS KOVVUR",
+                itemDescription: "OPENSTAGE 60T DIGITAL PHONE WITH ADAPTOR-01",
+                courierPartner: "MOVE ON",
+                awbNo: "67606",
+                remarks: "HANDOVERED AT 4TH FLOOR",
+                itemHandoveredBy: "S SUDARSHAN",
+                shipmentStatus: "Delivered",
+                liveTrackingUrl: "https://authorcodesoftware.in/moveonlogistics/newmastertracking.aspx?awb=67606"
+
+	   },
+            {
+                date: "06.12.2024",
+                sentFrom: "SELECT ENGINEERING & SYSTEMS - HYD",
+                sentTo: "M/S HEXA COMMUNICATIONS PVT LTD - MUMBAIL",
+                itemDescription: "OPENSTAGE 40T DIGITAL PHONE-02",
+                courierPartner: "FRANCH EXPRESS",
+                awbNo: "97040122115",
+                remarks: "HANDOVERED AT 4TH FLOOR",
+                itemHandoveredBy: "S SUDARSHAN",
+                shipmentStatus: "IN TRANSIT",
+                liveTrackingUrl: "https://franchexpress.com/courier-tracking/"
+            
+           },
+            {
+                date: "06.12.2024",
+                sentFrom: "SELECT ENGINEERING & SYSTEMS - HYD",
+                sentTo: "M/S ANDHRA SUGARS - TANUKU",
+                itemDescription: "ORIGINAL INVOICE COPYS",
+                courierPartner: "INDIAN POST",
+                awbNo: "RN132490586IN",
+                remarks: "HANDOVERED POST OFFICE",
+                itemHandoveredBy: "VINAY(OFFICE BOY)",
+                shipmentStatus: "Delivered",
+                liveTrackingUrl: "https://www.indiapost.gov.in/_layouts/15/DOP.Portal.Tracking/TrackConsignment.aspx"
+            },
+            {
+                date: "06.12.2024",
+                sentFrom: "SELECT ENGINEERING & SYSTEMS - HYD",
+                sentTo: "ANDHRA PAPERS - RAJAHMUNDRY",
+                itemDescription: "ORIGINAL INVOICE COPYS",
+                courierPartner: "INDIAN POST",
+                awbNo: "RN132490467IN",
+                remarks: "HANDOVERED POST OFFICE",
+                itemHandoveredBy: "VINAY(OFFICE BOY)",
+                shipmentStatus: "Delivered",
+                liveTrackingUrl: "https://www.indiapost.gov.in/_layouts/15/DOP.Portal.Tracking/TrackConsignment.aspx" 
+      
+            },
+            {
+                date: "06.12.2024",
+                sentFrom: "SELECT ENGINEERING & SYSTEMS - HYD",
+                sentTo: "DODLA DAIRY - NADIMIDIDDIPALLI",
+                itemDescription: "ORIGINAL INVOICE COPYS",
+                courierPartner: "INDIAN POST",
+                awbNo: "RN132490351IN",
+                remarks: "HANDOVERED POST OFFICE",
+                itemHandoveredBy: "VINAY(OFFICE BOY)",
+                shipmentStatus: "Delivered",
+                liveTrackingUrl: "https://www.indiapost.gov.in/_layouts/15/DOP.Portal.Tracking/TrackConsignment.aspx" 
+           },
+            {
+                date: "07.12.2024",
+                sentFrom: "SELECT ENGINEERING & SYSTEMS - HYD",
+                sentTo: "SELECT AUTOMOBILES - KARIMNAGAR",
+                itemDescription: "01 BOX",
+                courierPartner: "MOVE ON",
+                awbNo: "67607",
+                remarks: "HANDOVERED AT 4TH FLOOR",
+                itemHandoveredBy: "K SHIVA",
+                shipmentStatus: "Delivered",
+                liveTrackingUrl: "https://authorcodesoftware.in/moveonlogistics/newmastertracking.aspx?awb=67607"
+            },
+            {
+                date: "07.12.2024",
+                sentFrom: "SELECT ENGINEERING & SYSTEMS - HYD",
+                sentTo: "HOTEL MIVERVA GRAND - TIRUPATHI",
+                itemDescription: "01 BOX",
+                courierPartner: "MOVE ON",
+                awbNo: "67608",
+                remarks: "HANDOVERED AT 4TH FLOOR",
+                itemHandoveredBy: "K SHIVA",
+                shipmentStatus: "Delivered",
+                liveTrackingUrl: "https://authorcodesoftware.in/moveonlogistics/newmastertracking.aspx?awb=67608"
+           },
+            {
+                date: "09.12.2024",
+                sentFrom: "SELECT ENGINEERING & SYSTEMS - HYD",
+                sentTo: "LAURUS LABS LTD - UNIT 1 ( ANAKAPALLI )",
+                itemDescription: "SIGNTEL SL910 (20) PHONES",
+                courierPartner: "MOVE ON",
+                awbNo: "70254",
+                remarks: "HANDOVERED AT 4TH FLOOR",
+                itemHandoveredBy: "S SUDARSHAN",
+                shipmentStatus: "IN TRANSIT",
+                liveTrackingUrl: "https://authorcodesoftware.in/moveonlogistics/newmastertracking.aspx?awb=70254"
+	   },
+            {
+                date: "11.12.2024",
+                sentFrom: "SELECT ENGINEERING & SYSTEMS - HYD",
+                sentTo: "LAURUS LABS LTD - UNIT 1 ( ANAKAPALLI )",
+                itemDescription: "ORIGINAL INVOICE COPYS",
+                courierPartner: "INDIAN POST",
+                awbNo: "EN428330484IN",
+                remarks: "HANDOVERED AT 4TH FLOOR",
+                itemHandoveredBy: "VINAY OFFICE BOY",
+                shipmentStatus: "IN TRANSIT",
+                liveTrackingUrl: "https://www.indiapost.gov.in/_layouts/15/DOP.Portal.Tracking/TrackConsignment.aspx="
+          },
+            {
+                date: "11.12.2024",
+                sentFrom: "SELECT ENGINEERING & SYSTEMS - HYD",
+                sentTo: "ANDHRA SUGARS TANUKU",
+                itemDescription: "ORIGINAL INVOICE COPYS",
+                courierPartner: "INDIAN POST",
+                awbNo: "EN428330475IN",
+                remarks: "HANDOVERED AT 4TH FLOOR",
+                itemHandoveredBy: "VINAY OFFICE BOY",
+                shipmentStatus: "IN TRANSIT",
+                liveTrackingUrl: "https://www.indiapost.gov.in/_layouts/15/DOP.Portal.Tracking/TrackConsignment.aspx"
+          },
+            {
+                date: "11.12.2024",
+                sentFrom: "SELECT ENGINEERING & SYSTEMS - HYD",
+                sentTo: "M/S LAURUS LABS LTD UNIT-2,ANAKAPALLI",
+                itemDescription: "SL5 DECT HANDSET (10)NO'S & ORIGINAL INVOICE COPYS",
+                courierPartner: "MOVE ON",
+                awbNo: "70262",
+                remarks: "HANDOVERED AT 4TH FLOOR",
+                itemHandoveredBy: "S SUDARSHAN",
+                shipmentStatus: "Booked",
+                liveTrackingUrl: "https://authorcodesoftware.in/moveonlogistics/newmastertracking.aspx?awb=70262"
+          },
+            {
+                date: "11.12.2024",
+                sentFrom: "SELECT ENGINEERING & SYSTEMS - HYD",
+                sentTo: "M/S LAURUS LABS LTD UNIT-6,ANAKAPALLI",
+                itemDescription: "SL910 (15) NOS, BS5 BASE STATION(6) NOS & ORIGNAL INVOICE COPYS",
+                courierPartner: "MOVE ON",
+                awbNo: "70263",
+                remarks: "HANDOVERED AT 4TH FLOOR",
+                itemHandoveredBy: "S SUDARSHAN",
+                shipmentStatus: "Booked",
+                liveTrackingUrl: "https://authorcodesoftware.in/moveonlogistics/newmastertracking.aspx?awb=70263"
+				
+		   },
+            {
+                date: "12.12.2024",
+                sentFrom: "SELECT ENGINEERING & SYSTEMS - HYD",
+                sentTo: "BEST WESTREN RAMACHANDRA ",
+                itemDescription: "ORIGNAL INVOICE COPYS",
+                courierPartner: "INDIAN SPEEDPOST",
+                awbNo: "YET TO RECIEVE",
+                remarks: "HANDOVERED AT POST OFFICE",
+                itemHandoveredBy: "VINAY OFFICE BOY",
+                shipmentStatus: "Booked",
+                liveTrackingUrl: "https://www.indiapost.gov.in/_layouts/15/DOP.Portal.Tracking/TrackConsignment.aspx"
+	      },
+            {
+                date: "12.12.2024",
+                sentFrom: "SELECT ENGINEERING & SYSTEMS - HYD",
+                sentTo: "ANNORA PHARMA ",
+                itemDescription: "ORIGNAL INVOICE COPYS",
+                courierPartner: "INDIAN SPEEDPOST",
+                awbNo: "YET TO RECIEVE",
+                remarks: "HANDOVERED AT POST OFFICE",
+                itemHandoveredBy: "VINAY OFFICE BOY",
+                shipmentStatus: "Booked",
+                liveTrackingUrl: "https://www.indiapost.gov.in/_layouts/15/DOP.Portal.Tracking/TrackConsignment.aspx"
+
+           }
+        ];
+
+        // Function to render the table rows dynamically
+        function renderCourierData(filteredData) {
+            const tableBody = document.getElementById("courierTable");
+            tableBody.innerHTML = ''; // Clear previous table rows
+            filteredData.forEach(item => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${item.date}</td>
+                    <td>${item.sentFrom}</td>
+                    <td>${item.sentTo}</td>
+                    <td>${item.itemDescription}</td>
+                    <td>${item.courierPartner}</td>
+                    <td>${item.awbNo}</td>
+                    <td>${item.remarks}</td>
+                    <td>${item.itemHandoveredBy}</td>
+                    <td>${item.shipmentStatus}</td>
+                    <td><a href="${item.liveTrackingUrl}" target="_blank">Track Now</a></td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Function to search the data
+        function searchCourierData(query) {
+            const filteredData = courierData.filter(item => {
+                return Object.values(item).some(val => 
+                    val.toString().toLowerCase().includes(query.toLowerCase())
+                );
+            });
+            renderCourierData(filteredData);
+        }
+
+        // Event listener for the search box
+        document.getElementById("search").addEventListener("input", function() {
+            const query = this.value;
+            searchCourierData(query);
+        });
+
+        // Update the current date and time
+        function updateDateTime() {
+            const currentDate = new Date();
+            const dateTimeString = currentDate.toLocaleString();
+            document.getElementById("currentDateTime").textContent = `Current Date & Time: ${dateTimeString}`;
+        }
+
+        // Initial render when page loads
+        renderCourierData(courierData);
+        updateDateTime(); // Display current date & time
+        setInterval(updateDateTime, 1000); // Update every second
+    </script>
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.5">
+    <printf>By Sudharshan</title>
+
+</body>
+</html>
