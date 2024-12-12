@@ -1,6 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyAWTLCe2KWU4rTo-ZS3g4jE-DC40PC-oD0",
+    authDomain: "sescouriertracker.firebaseapp.com",
+    projectId: "sescouriertracker",
+    storageBucket: "sescouriertracker.firebasestorage.app",
+    messagingSenderId: "246998621728",
+    appId: "1:246998621728:web:f8de49a865acef7732a645",
+    measurementId: "G-4D1ZXLMS6G"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Select Engineering & Systems (KTS) Courier Data Tracking Portal</title>
